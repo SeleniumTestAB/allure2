@@ -170,7 +170,7 @@ public class JiraExportPlugin implements Aggregator {
         try {
             final JiraTestResult created = jiraService.createTestResult(testResult);
             LOGGER.info(String.format("Allure test result '%s' synced with issue '%s' successfully",
-                    created.getId(),
+                    created.getExternalId(),
                     created.getIssueKeys()));
         } catch (Throwable e) {
             LOGGER.error(String.format("Allure test result sync with issue '%s' failed", testResult.getIssueKeys()), e);
