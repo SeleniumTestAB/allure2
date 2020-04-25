@@ -22,7 +22,6 @@ import io.qameta.allure.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,7 +47,7 @@ public class JiraExportPlugin implements Aggregator {
 
     private final Supplier<JiraService> jiraServiceSupplier;
     private final boolean enabled;
-    private final String issues;
+    private final String issue;
 
     public JiraExportPlugin() {
         this(
@@ -59,11 +58,11 @@ public class JiraExportPlugin implements Aggregator {
     }
 
     public JiraExportPlugin(final boolean enabled,
-                            final String issues,
+                            final String issue,
                             final Supplier<JiraService> jiraServiceSupplier) {
         this.jiraServiceSupplier = jiraServiceSupplier;
         this.enabled = enabled;
-        this.issues = issues;
+        this.issue = issue;
     }
 
     @Override
@@ -73,11 +72,11 @@ public class JiraExportPlugin implements Aggregator {
         if (enabled) {
             final JiraService jiraService = jiraServiceSupplier.get();
 
-            final List<String> issues = splitByComma(this.issues);
+
             final ExecutorInfo executor = getExecutor(launchesResults);
             final Statistic statisticToConvert = getStatistic(launchesResults);
             final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
-            final JiraLaunch launch = getJiraLaunch(issues, executor, statistic);
+            final JiraLaunch launch = getJiraLaunch(issue, executor, statistic);
             final JiraLaunch created = exportLaunchToJira(jiraService, launch);
 
             getTestResults(launchesResults).stream()
@@ -88,10 +87,11 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private JiraLaunch getJiraLaunch(final List<String> issueKeys,
+    private JiraLaunch getJiraLaunch(final String issue,
                                      final ExecutorInfo executor,
                                      final List<LaunchStatisticExport> statistic) {
         return new JiraLaunch()
+                .setExternalId(issue)
                 .setStatistic(statistic)
                 .setName(executor.getBuildName())
                 .setUrl(executor.getReportUrl())
@@ -148,14 +148,14 @@ public class JiraExportPlugin implements Aggregator {
         return statistic;
     }
 
-    private List<LaunchStatisticExport> convertStatistics(Statistic statistic) {
+    private List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
         return Stream.of(Status.values()).map(status ->
                 new LaunchStatisticExport(status.value(), findColorForStatus(status), statistic.get(status)))
                 .collect(Collectors.toList());
 
     }
 
-    private String findColorForStatus(Status status) {
+    private String findColorForStatus(final Status status) {
         switch (status) {
             case FAILED:
                 return StatusColor.RED.value();
