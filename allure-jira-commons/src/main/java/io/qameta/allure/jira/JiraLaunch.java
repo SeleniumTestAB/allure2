@@ -30,7 +30,7 @@ import java.util.List;
 public class JiraLaunch {
     private String externalId;
 
-    private List<String> issueKeys;
+    private List<LaunchStatisticExport> statistic;
 
     private String name;
     private String url;

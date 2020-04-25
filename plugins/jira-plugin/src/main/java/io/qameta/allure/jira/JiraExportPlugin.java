@@ -18,10 +18,7 @@ package io.qameta.allure.jira;
 import io.qameta.allure.Aggregator;
 import io.qameta.allure.core.Configuration;
 import io.qameta.allure.core.LaunchResults;
-import io.qameta.allure.entity.ExecutorInfo;
-import io.qameta.allure.entity.Link;
-import io.qameta.allure.entity.Statistic;
-import io.qameta.allure.entity.TestResult;
+import io.qameta.allure.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.qameta.allure.util.PropertyUtils.getProperty;
 
@@ -76,8 +74,8 @@ public class JiraExportPlugin implements Aggregator {
 
             final List<String> issues = splitByComma(this.issues);
             final ExecutorInfo executor = getExecutor(launchesResults);
-            final Statistic statistic = getStatistic(launchesResults);
-
+            final Statistic statisticToConvert = getStatistic(launchesResults);
+            final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
             final JiraLaunch launch = getJiraLaunch(issues, executor, statistic);
             final JiraLaunch created = exportLaunchToJira(jiraService, launch);
 
@@ -91,16 +89,11 @@ public class JiraExportPlugin implements Aggregator {
 
     private JiraLaunch getJiraLaunch(final List<String> issueKeys,
                                      final ExecutorInfo executor,
-                                     final Statistic statistic) {
+                                     final List<LaunchStatisticExport> statistic) {
         return new JiraLaunch()
-                .setIssueKeys(issueKeys)
+                .setStatistic(statistic)
                 .setName(executor.getBuildName())
                 .setUrl(executor.getReportUrl())
-                .setPassed(statistic.getPassed())
-                .setFailed(statistic.getFailed())
-                .setBroken(statistic.getBroken())
-                .setSkipped(statistic.getSkipped())
-                .setUnknown(statistic.getUnknown())
                 .setDate(System.currentTimeMillis());
     }
 
@@ -154,14 +147,36 @@ public class JiraExportPlugin implements Aggregator {
         return statistic;
     }
 
+    private List<LaunchStatisticExport> convertStatistics(Statistic statistic) {
+        return Stream.of(Status.values()).map(status ->
+                new LaunchStatisticExport(status.value(),findColorForStatus(status), statistic.get(status)))
+                .collect(Collectors.toList());
+
+    }
+
+    private String findColorForStatus(Status status) {
+        switch (status) {
+            case FAILED:
+                return "#FF0000";
+            case BROKEN:
+                return "#FFFF00";
+            case PASSED:
+                return "#008000";
+            case SKIPPED:
+                return "#808080";
+            default:
+                return "#FFFF00";
+        }
+    }
+
     private JiraLaunch exportLaunchToJira(final JiraService jiraService, final JiraLaunch launch) {
         try {
             final JiraLaunch created = jiraService.createJiraLaunch(launch);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
-                     created.getIssueKeys()));
+                     created.getStatistic()));
             return created;
         } catch (Throwable e) {
-            LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getIssueKeys()), e);
+            LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getStatistic()), e);
             throw e;
         }
     }

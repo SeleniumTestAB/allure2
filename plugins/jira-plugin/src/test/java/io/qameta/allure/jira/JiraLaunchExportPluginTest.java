@@ -75,8 +75,8 @@ class JiraLaunchExportPluginTest {
         );
 
         verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class));
-        verify(service).createJiraLaunch(argThat(launch -> launch.getIssueKeys().size() == 2));
-        verify(service).createJiraLaunch(argThat(launch -> ISSUES.equals(launch.getIssueKeys())));
+        verify(service).createJiraLaunch(argThat(launch -> launch.getStatistic().size() == 2));
+//        verify(service).createJiraLaunch(argThat(launch -> ISSUES.equals(launch.getStatistic())));
 
         verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())));
         verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())));
