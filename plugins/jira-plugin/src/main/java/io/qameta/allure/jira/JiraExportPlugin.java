@@ -157,8 +157,8 @@ public class JiraExportPlugin implements Aggregator {
     private JiraLaunch exportLaunchToJira(final JiraService jiraService, final JiraLaunch launch) {
         try {
             final JiraLaunch created = jiraService.createJiraLaunch(launch);
-            LOGGER.info(String.format("Allure launch '%s' synced with issues successfully",
-                    created.getExternalId()));
+            LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
+                     created.getIssueKeys()));
             return created;
         } catch (Throwable e) {
             LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getIssueKeys()), e);
