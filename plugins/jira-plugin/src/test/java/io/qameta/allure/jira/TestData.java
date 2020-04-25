@@ -38,7 +38,7 @@ public final class TestData {
         });
         when(service.createTestResult(any(JiraTestResult.class))).thenAnswer(i -> {
             final JiraTestResult testResult = i.getArgument(0);
-            testResult.setId(RandomUtils.nextInt());
+            testResult.setExternalId(String.valueOf(RandomUtils.nextInt()));
             return testResult;
         });
         return service;
