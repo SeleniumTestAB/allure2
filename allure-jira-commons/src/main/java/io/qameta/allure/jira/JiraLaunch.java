@@ -28,7 +28,6 @@ import java.util.List;
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JiraLaunch {
-    private String id;
     private String externalId;
 
     private List<String> issueKeys;

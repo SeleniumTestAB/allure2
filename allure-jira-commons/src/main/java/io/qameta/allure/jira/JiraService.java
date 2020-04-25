@@ -50,6 +50,6 @@ public interface JiraService {
     List<XrayTestRun> getTestRunsForTestExecution(@Path("issueKey") String issueKey);
 
     @PUT("raven/1.0/api/testrun/{id}/status")
-    Response<ResponseBody> updateTestRunStatus(@Path("id") Integer id, @Query("status") String status);
+    Response<ResponseBody> updateTestRunStatus(@Path("externalId") Integer externalId, @Query("status") String status);
 
 }

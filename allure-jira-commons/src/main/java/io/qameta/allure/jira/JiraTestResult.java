@@ -29,8 +29,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JiraTestResult {
 
-    private int id;
-
     private String externalId;
     private List<String> issueKeys;
 
