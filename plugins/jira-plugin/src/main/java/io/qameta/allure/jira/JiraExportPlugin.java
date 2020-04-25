@@ -75,7 +75,7 @@ public class JiraExportPlugin implements Aggregator {
             final ExecutorInfo executor = getExecutor(launchesResults);
             final Statistic statisticToConvert = getStatistic(launchesResults);
             final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
-            final JiraLaunch launch = getJiraLaunch(issue, executor, statistic);
+            final JiraLaunch launch = getJiraLaunch(executor, statistic);
             final JiraLaunch created = exportLaunchToJira(jiraService, launch);
 
             getTestResults(launchesResults).stream()
@@ -86,11 +86,9 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private JiraLaunch getJiraLaunch(final String issue,
-                                     final ExecutorInfo executor,
+    private JiraLaunch getJiraLaunch(final ExecutorInfo executor,
                                      final List<LaunchStatisticExport> statistic) {
         return new JiraLaunch()
-                .setExternalId(issue)
                 .setStatistic(statistic)
                 .setName(executor.getBuildName())
                 .setUrl(executor.getReportUrl())
@@ -169,9 +167,9 @@ public class JiraExportPlugin implements Aggregator {
 
     private JiraLaunch exportLaunchToJira(final JiraService jiraService, final JiraLaunch launch) {
         try {
-            final JiraLaunch created = jiraService.createJiraLaunch(launch);
+            final JiraLaunch created = jiraService.createJiraLaunch(launch, issue);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
-                     created.getExternalId()));
+                     issue));
             return created;
         } catch (Throwable e) {
             LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getExternalId()), e);

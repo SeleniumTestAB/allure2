@@ -74,12 +74,12 @@ class JiraLaunchExportPluginTest {
                 Paths.get("/")
         );
 
-        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class));
+        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class), RandomStringUtils.random(10));
         //verify(service).createJiraLaunch(argThat(launch -> launch.getStatistic().size() == 2));
 //        verify(service).createJiraLaunch(argThat(launch -> ISSUES.equals(launch.getStatistic())));
 
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())));
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())));
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())), RandomStringUtils.random(10));
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())), RandomStringUtils.random(10));
 
 //        verify(service).createJiraLaunch(argThat(launch -> launch.getPassed() == 1));
 //        verify(service).createJiraLaunch(argThat(launch -> launch.getFailed() == 1));

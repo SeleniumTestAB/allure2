@@ -31,7 +31,7 @@ public final class TestData {
 
     public static JiraService mockJiraService() {
         final JiraService service = mock(JiraService.class);
-        when(service.createJiraLaunch(any(JiraLaunch.class))).thenAnswer(i -> {
+        when(service.createJiraLaunch(any(JiraLaunch.class), RandomStringUtils.random(10))).thenAnswer(i -> {
             final JiraLaunch launch = i.getArgument(0);
             launch.setExternalId(String.valueOf(RandomUtils.nextInt()));
             return launch;

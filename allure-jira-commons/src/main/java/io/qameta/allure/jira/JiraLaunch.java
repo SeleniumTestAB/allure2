@@ -29,9 +29,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JiraLaunch {
     private String externalId;
-
     private List<LaunchStatisticExport> statistic;
-
     private String name;
     private String url;
     private Long date;

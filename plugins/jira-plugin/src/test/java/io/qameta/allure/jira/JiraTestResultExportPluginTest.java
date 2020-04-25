@@ -77,9 +77,9 @@ class JiraTestResultExportPluginTest {
                 Collections.singletonList(launchResults),
                 Paths.get("/")
         );
-        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class));
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())));
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())));
+        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class), RandomStringUtils.random(10));
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())), RandomStringUtils.random(10));
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())), RandomStringUtils.random(10));
 
         verify(service, times(1)).createTestResult(any(JiraTestResult.class));
         verify(service).createTestResult(argThat(result -> result.getIssueKeys().size() == 2));
