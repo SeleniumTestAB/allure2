@@ -36,10 +36,6 @@ public class JiraLaunch {
     private String url;
     private Long date;
 
-    private Long failed;
-    private Long broken;
-    private Long passed;
-    private Long skipped;
-    private Long unknown;
+
 
 }

@@ -171,10 +171,10 @@ public class JiraExportPlugin implements Aggregator {
         try {
             final JiraLaunch created = jiraService.createJiraLaunch(launch);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
-                     created.getStatistic()));
+                     created.getExternalId()));
             return created;
         } catch (Throwable e) {
-            LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getStatistic()), e);
+            LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getExternalId()), e);
             throw e;
         }
     }
