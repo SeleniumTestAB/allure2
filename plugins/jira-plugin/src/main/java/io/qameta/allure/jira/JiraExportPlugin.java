@@ -204,8 +204,5 @@ public class JiraExportPlugin implements Aggregator {
         return "issue".equals(link.getType());
     }
 
-    private static List<String> splitByComma(final String value) {
-        return Arrays.asList(value.split(","));
-    }
 
 }
