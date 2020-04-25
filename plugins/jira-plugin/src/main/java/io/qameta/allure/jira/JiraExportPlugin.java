@@ -22,6 +22,7 @@ import io.qameta.allure.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -149,7 +150,7 @@ public class JiraExportPlugin implements Aggregator {
 
     private List<LaunchStatisticExport> convertStatistics(Statistic statistic) {
         return Stream.of(Status.values()).map(status ->
-                new LaunchStatisticExport(status.value(),findColorForStatus(status), statistic.get(status)))
+                new LaunchStatisticExport(status.value(), findColorForStatus(status), statistic.get(status)))
                 .collect(Collectors.toList());
 
     }
@@ -157,15 +158,13 @@ public class JiraExportPlugin implements Aggregator {
     private String findColorForStatus(Status status) {
         switch (status) {
             case FAILED:
-                return "#FF0000";
-            case BROKEN:
-                return "#FFFF00";
+                return StatusColor.RED.value();
             case PASSED:
-                return "#008000";
+                return StatusColor.GREEN.value();
             case SKIPPED:
-                return "#808080";
+                return StatusColor.GRAY.value();
             default:
-                return "#FFFF00";
+                return StatusColor.YELLOW.value();
         }
     }
 
