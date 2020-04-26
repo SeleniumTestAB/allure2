@@ -49,7 +49,7 @@ public interface JiraService {
     @GET("raven/1.0/api/testexec/{issueKey}/test")
     List<XrayTestRun> getTestRunsForTestExecution(@Path("issueKey") String issueKey);
 
-    @PUT("raven/1.0/api/testrun/{id}/status")
+    @PUT("raven/1.0/api/testrun/{externalId}/status")
     Response<ResponseBody> updateTestRunStatus(@Path("externalId") Integer externalId, @Query("status") String status);
 
 }

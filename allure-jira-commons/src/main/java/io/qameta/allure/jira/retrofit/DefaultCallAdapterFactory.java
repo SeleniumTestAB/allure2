@@ -16,6 +16,7 @@
 package io.qameta.allure.jira.retrofit;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
@@ -88,6 +89,7 @@ public final class DefaultCallAdapterFactory<T> extends CallAdapter.Factory {
     /**
      * Call adapter factory for instances.
      */
+    @Slf4j
     @SuppressFBWarnings("NP_NONNULL_RETURN_VIOLATION")
     private class InstanceCallAdapter implements CallAdapter<T, Object> {
 
@@ -109,8 +111,9 @@ public final class DefaultCallAdapterFactory<T> extends CallAdapter.Factory {
             final retrofit2.Response<T> response;
             try {
                 response = call.execute();
+                log.info(response.toString());
             } catch (IOException e) {
-                throw new ServiceException("Could not get request body", e);
+                throw new ServiceException("Could not get request body ", e);
             }
             if (!response.isSuccessful()) {
                 if (response.code() == NOT_FOUND) {
