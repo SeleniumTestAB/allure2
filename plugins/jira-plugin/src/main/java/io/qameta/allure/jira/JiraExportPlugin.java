@@ -125,7 +125,8 @@ public class JiraExportPlugin implements Aggregator {
                     .setColor(findColorForStatus(testResult.getStatus()))
                     .setDate(testResult.getTime().getStop())
                     .setLaunchUrl(executor.getReportUrl())
-                    .setLaunchName(executor.getBuildName());
+                    .setLaunchName(executor.getBuildName())
+                    .setLaunchExternalId(executor.getBuildName());
             return Optional.of(jiraTestResult);
         }
     }
