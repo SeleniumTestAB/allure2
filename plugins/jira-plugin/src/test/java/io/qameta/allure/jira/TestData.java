@@ -32,31 +32,31 @@ import static org.mockito.Mockito.when;
 
 public final class TestData {
 
-    private TestData(){
-    }
-
-    public static JiraService mockJiraService() {
-        final JiraService service = mock(JiraService.class);
-        when(service.createJiraLaunch(any(JiraLaunch.class), anyList())).thenAnswer(i -> {
-            List<JiraLaunchResult> jiraLaunchResults = spy(new ArrayList<>());
-            jiraLaunchResults.add(new JiraLaunchResult().setExternalId("ALLURE-1")
-                    .setIssueKey("ALLURE-1")
-                    .setStatus("ok"));
-            return jiraLaunchResults;
-        });
-        when(service.createTestResult(any(JiraTestResult.class))).thenAnswer(i -> {
-            final JiraTestResult testResult = i.getArgument(0);
-            testResult.setExternalId(String.valueOf(RandomUtils.nextInt()));
-            return testResult;
-        });
-        return service;
-    }
-
-    public static TestResult createTestResult(final Status status) {
-        return new TestResult()
-                .setUid(RandomStringUtils.random(10))
-                .setName(RandomStringUtils.random(10))
-                .setStatus(status);
-    }
+//    private TestData(){
+//    }
+//
+//    public static JiraService mockJiraService() {
+//        final JiraService service = mock(JiraService.class);
+//        when(service.createJiraLaunch(any(JiraLaunch.class), anyList())).thenAnswer(i -> {
+//            List<JiraExportResult> jiraLaunchResults = spy(new ArrayList<>());
+//            jiraLaunchResults.add(new JiraExportResult().setExternalId("ALLURE-1")
+//                    .setIssueKey("ALLURE-1")
+//                    .setStatus("ok"));
+//            return jiraLaunchResults;
+//        });
+//        when(service.createTestResult(any(JiraTestResult.class))).thenAnswer(i -> {
+//            final JiraTestResult testResult = i.getArgument(0);
+//            testResult.setExternalId(String.valueOf(RandomUtils.nextInt()));
+//            return testResult;
+//        });
+//        return service;
+//    }
+//
+//    public static TestResult createTestResult(final Status status) {
+//        return new TestResult()
+//                .setUid(RandomStringUtils.random(10))
+//                .setName(RandomStringUtils.random(10))
+//                .setStatus(status);
+//    }
 
 }

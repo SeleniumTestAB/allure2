@@ -35,13 +35,13 @@ public interface JiraService {
     Response<ResponseBody> createIssueComment(@Path("issueKey") String issueKey, @Body JiraIssueComment comment);
 
     @POST("allure/1.0/launch")
-    List<JiraLaunchResult> createJiraLaunch(@Body JiraLaunch launch, @Query("issueKey") List<String> issueKey);
+    List<JiraExportResult> createJiraLaunch(@Body JiraLaunch launch, @Query("issueKey") List<String> issueKey);
 
     @GET("allure/1.0/launch")
     List<JiraLaunch> getJiraLaunches(@Query("issueKey") String issueKey);
 
     @POST("allure/1.0/testresult")
-    JiraTestResult createTestResult(@Body JiraTestResult launch);
+    List<JiraExportResult> createTestResult(@Body JiraTestResult launch, @Query("issueKey") List<String> issueKey);
 
     @GET("allure/1.0/testresult")
     List<JiraTestResult> getTestResults(@Query("issueKey") String issueKey);

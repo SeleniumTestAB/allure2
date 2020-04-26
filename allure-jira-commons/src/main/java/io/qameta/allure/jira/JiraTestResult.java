@@ -28,14 +28,15 @@ import java.util.List;
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JiraTestResult {
-
     private String externalId;
-    private List<String> issueKeys;
-
+    private String testCaseId;
+    private String historyKey;
     private String name;
     private String url;
-    private Long date;
-
     private String status;
-
+    private String color;
+    private Long date;
+    private String launchExternalId;
+    private String launchName;
+    private String launchUrl;
 }

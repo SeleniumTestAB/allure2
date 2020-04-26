@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JiraLaunchResult {
+public class JiraExportResult {
     private String issueKey;
     private String externalId;
     private String status;

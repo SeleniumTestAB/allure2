@@ -18,7 +18,11 @@ package io.qameta.allure.jira;
 import io.qameta.allure.Aggregator;
 import io.qameta.allure.core.Configuration;
 import io.qameta.allure.core.LaunchResults;
-import io.qameta.allure.entity.*;
+import io.qameta.allure.entity.ExecutorInfo;
+import io.qameta.allure.entity.Link;
+import io.qameta.allure.entity.Statistic;
+import io.qameta.allure.entity.Status;
+import io.qameta.allure.entity.TestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,13 +81,16 @@ public class JiraExportPlugin implements Aggregator {
             final Statistic statisticToConvert = getStatistic(launchesResults);
             final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
             final JiraLaunch launch = getJiraLaunch(executor, statistic);
-            final List<JiraLaunchResult> created = exportLaunchToJira(jiraService, launch, issues);
+            final List<JiraExportResult> created = exportLaunchToJira(jiraService, launch, issues);
 
             getTestResults(launchesResults).stream()
-                    .map(testResult -> getJiraTestResult(created, executor, testResult))
+                    .map(testResult -> getJiraTestResult(executor, testResult))
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .forEach(testResult -> exportTestResultToJira(jiraService, testResult));
+                    .forEach(testResult -> {
+                        getTestResults(launchesResults).stream()
+                                .forEach(testResult1 -> exportTestResultToJira(jiraService, testResult, testResult1));
+                    });
         }
     }
 
@@ -96,8 +103,7 @@ public class JiraExportPlugin implements Aggregator {
                 .setDate(System.currentTimeMillis());
     }
 
-    private Optional<JiraTestResult> getJiraTestResult(final List<JiraLaunchResult> launchResult,
-                                                       final ExecutorInfo executor,
+    private Optional<JiraTestResult> getJiraTestResult(final ExecutorInfo executor,
                                                        final TestResult testResult) {
         final List<String> issues = testResult.getLinks().stream()
                 .filter(this::isIssueLink)
@@ -108,12 +114,15 @@ public class JiraExportPlugin implements Aggregator {
             return Optional.empty();
         } else {
             final JiraTestResult jiraTestResult = new JiraTestResult()
-                    .setIssueKeys(issues)
+                    .setTestCaseId(testResult.getTestId())
+                    .setHistoryKey(testResult.getHistoryId())
                     .setName(testResult.getName())
                     .setUrl(getJiraTestResultUrl(executor.getReportUrl(), testResult.getUid()))
                     .setStatus(testResult.getStatus().toString())
+                    .setColor(findColorForStatus(testResult.getStatus()))
                     .setDate(testResult.getTime().getStop())
-                    .setExternalId(launchResult.get(0).getExternalId());
+                    .setLaunchUrl(executor.getReportUrl())
+                    .setLaunchName(executor.getBuildName());
             return Optional.of(jiraTestResult);
         }
     }
@@ -166,11 +175,11 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private List<JiraLaunchResult> exportLaunchToJira(final JiraService jiraService,
-                                          final JiraLaunch launch,
-                                          final List<String> issues) {
+    private List<JiraExportResult> exportLaunchToJira(final JiraService jiraService,
+                                                      final JiraLaunch launch,
+                                                      final List<String> issues) {
         try {
-            final List<JiraLaunchResult> created = jiraService.createJiraLaunch(launch, issues);
+            final List<JiraExportResult> created = jiraService.createJiraLaunch(launch, issues);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
                     issues));
             return created;
@@ -180,14 +189,23 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private void exportTestResultToJira(final JiraService jiraService, final JiraTestResult testResult) {
+    private void exportTestResultToJira(final JiraService jiraService, final JiraTestResult jiraTestResult, final TestResult testResult) {
         try {
-            final JiraTestResult created = jiraService.createTestResult(testResult);
-            LOGGER.info(String.format("Allure test result '%s' synced with issue '%s' successfully",
-                    created.getExternalId(),
-                    created.getIssueKeys()));
+            final List<String> issues = testResult.getLinks().stream()
+                    .filter(this::isIssueLink)
+                    .map(Link::getName)
+                    .collect(Collectors.toList());
+
+            final List<JiraExportResult> created = jiraService.createTestResult(jiraTestResult, issues);
+            created.forEach(creation -> {
+                        LOGGER.info(String.format("Allure test result '%s' synced with issue '%s' successfully",
+                                creation.getExternalId(),
+                                creation.getIssueKey()));
+                    }
+
+            );
         } catch (Throwable e) {
-            LOGGER.error(String.format("Allure test result sync with issue '%s' failed", testResult.getIssueKeys()), e);
+            LOGGER.error(String.format("Allure test result sync with issue '%s' failed", jiraTestResult.getExternalId()), e);
             throw e;
         }
     }
@@ -203,6 +221,7 @@ public class JiraExportPlugin implements Aggregator {
     private boolean isIssueLink(final Link link) {
         return "issue".equals(link.getType());
     }
+
     private static List<String> splitByComma(final String value) {
         return Arrays.asList(value.split(","));
     }
