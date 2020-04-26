@@ -89,7 +89,8 @@ public class JiraExportPlugin implements Aggregator {
                     .map(Optional::get)
                     .forEach(testResult -> {
                         getTestResults(launchesResults).stream()
-                                .forEach(testResult1 -> exportTestResultToJira(jiraService, testResult, testResult1));
+                                .forEach(testResult1 ->
+                                        exportTestResultToJira(jiraService, testResult, testResult1));
                     });
         }
     }
@@ -157,7 +158,8 @@ public class JiraExportPlugin implements Aggregator {
 
     private List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
         return Stream.of(Status.values()).map(status ->
-                new LaunchStatisticExport(status.value(), findColorForStatus(status), statistic.get(status)))
+                new LaunchStatisticExport(status.value(),
+                        findColorForStatus(status), statistic.get(status)))
                 .collect(Collectors.toList());
 
     }
@@ -189,7 +191,9 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private void exportTestResultToJira(final JiraService jiraService, final JiraTestResult jiraTestResult, final TestResult testResult) {
+    private void exportTestResultToJira(final JiraService jiraService,
+                                        final JiraTestResult jiraTestResult,
+                                        final TestResult testResult) {
         try {
             final List<String> issues = testResult.getLinks().stream()
                     .filter(this::isIssueLink)
@@ -202,10 +206,10 @@ public class JiraExportPlugin implements Aggregator {
                                 creation.getExternalId(),
                                 creation.getIssueKey()));
                     }
-
             );
         } catch (Throwable e) {
-            LOGGER.error(String.format("Allure test result sync with issue '%s' failed", jiraTestResult.getExternalId()), e);
+            LOGGER.error(String.format("Allure test result sync with issue '%s' failed",
+                    jiraTestResult.getExternalId()), e);
             throw e;
         }
     }
