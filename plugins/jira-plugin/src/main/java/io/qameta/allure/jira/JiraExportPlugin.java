@@ -117,7 +117,12 @@ public class JiraExportPlugin implements Aggregator {
         } else {
             final JiraTestResult jiraTestResult = new JiraTestResult()
                     .setExternalId(executor.getBuildName())
-                    .setTestCaseId(testResult.getTestId())
+                    .setTestCaseId(testResult.getLinks()
+                            .stream()
+                            .filter(this::isIssueLink)
+                            .findFirst()
+                            .orElse(null)
+                            .getName())
                     .setHistoryKey(testResult.getHistoryId())
                     .setName(testResult.getName())
                     .setUrl(getJiraTestResultUrl(executor.getReportUrl(), testResult.getUid()))
