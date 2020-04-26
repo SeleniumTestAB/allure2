@@ -32,9 +32,10 @@ public final class TestData {
     public static JiraService mockJiraService() {
         final JiraService service = mock(JiraService.class);
         when(service.createJiraLaunch(any(JiraLaunch.class), "ALLURE-1")).thenAnswer(i -> {
-            final JiraLaunch launch = i.getArgument(0);
-            launch.setExternalId(String.valueOf(RandomUtils.nextInt()));
-            return launch;
+//            final JiraLaunch launch = i.getArgument(0);
+//            launch.setExternalId(String.valueOf(RandomUtils.nextInt()));
+//            return launch;
+            return i;
         });
         when(service.createTestResult(any(JiraTestResult.class))).thenAnswer(i -> {
             final JiraTestResult testResult = i.getArgument(0);
