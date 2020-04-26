@@ -98,6 +98,7 @@ public class JiraExportPlugin implements Aggregator {
     private JiraLaunch getJiraLaunch(final ExecutorInfo executor,
                                      final List<LaunchStatisticExport> statistic) {
         return new JiraLaunch()
+                .setExternalId(executor.getBuildName())
                 .setStatistic(statistic)
                 .setName(executor.getBuildName())
                 .setUrl(executor.getReportUrl())
@@ -115,6 +116,7 @@ public class JiraExportPlugin implements Aggregator {
             return Optional.empty();
         } else {
             final JiraTestResult jiraTestResult = new JiraTestResult()
+                    .setExternalId(testResult.getUid())
                     .setTestCaseId(testResult.getTestId())
                     .setHistoryKey(testResult.getHistoryId())
                     .setName(testResult.getName())
