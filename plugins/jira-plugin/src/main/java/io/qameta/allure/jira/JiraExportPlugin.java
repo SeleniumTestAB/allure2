@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class JiraExportPlugin implements Aggregator {
 
     private final Supplier<JiraService> jiraServiceSupplier;
     private final boolean enabled;
-    private final String issue;
+    private final String issues;
 
     public JiraExportPlugin() {
         this(
@@ -57,11 +58,11 @@ public class JiraExportPlugin implements Aggregator {
     }
 
     public JiraExportPlugin(final boolean enabled,
-                            final String issue,
+                            final String issues,
                             final Supplier<JiraService> jiraServiceSupplier) {
         this.jiraServiceSupplier = jiraServiceSupplier;
         this.enabled = enabled;
-        this.issue = issue;
+        this.issues = issues;
     }
 
     @Override
@@ -71,12 +72,12 @@ public class JiraExportPlugin implements Aggregator {
         if (enabled) {
             final JiraService jiraService = jiraServiceSupplier.get();
 
-
+            final List<String> issues = splitByComma(this.issues);
             final ExecutorInfo executor = getExecutor(launchesResults);
             final Statistic statisticToConvert = getStatistic(launchesResults);
             final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
             final JiraLaunch launch = getJiraLaunch(executor, statistic);
-            final JiraLaunch created = exportLaunchToJira(jiraService, launch);
+            final JiraLaunch created = exportLaunchToJira(jiraService, launch, issues);
 
             getTestResults(launchesResults).stream()
                     .map(testResult -> getJiraTestResult(created, executor, testResult))
@@ -165,11 +166,13 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private JiraLaunch exportLaunchToJira(final JiraService jiraService, final JiraLaunch launch) {
+    private JiraLaunch exportLaunchToJira(final JiraService jiraService,
+                                          final JiraLaunch launch,
+                                          final List<String> issues) {
         try {
-            final JiraLaunch created = jiraService.createJiraLaunch(launch, issue);
+            final JiraLaunch created = jiraService.createJiraLaunch(launch, issues);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
-                     issue));
+                    issues));
             return created;
         } catch (Throwable e) {
             LOGGER.error(String.format("Allure launch sync with issue '%s' error", launch.getExternalId()), e);
@@ -200,6 +203,8 @@ public class JiraExportPlugin implements Aggregator {
     private boolean isIssueLink(final Link link) {
         return "issue".equals(link.getType());
     }
-
+    private static List<String> splitByComma(final String value) {
+        return Arrays.asList(value.split(","));
+    }
 
 }

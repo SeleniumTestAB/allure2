@@ -15,13 +15,13 @@
  */
 package io.qameta.allure.jira;
 
+import com.sun.tools.javac.util.List;
 import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +32,7 @@ public final class TestData {
 
     public static JiraService mockJiraService() {
         final JiraService service = mock(JiraService.class);
-        when(service.createJiraLaunch(any(JiraLaunch.class), anyString())).thenAnswer(i -> {
+        when(service.createJiraLaunch(any(JiraLaunch.class), anyList())).thenAnswer(i -> {
             final JiraLaunch launch = i.getArgument(0);
             launch.setExternalId(String.valueOf(RandomUtils.nextInt()));
             return launch;
