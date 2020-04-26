@@ -33,8 +33,7 @@ import java.util.Set;
 
 import static io.qameta.allure.jira.TestData.createTestResult;
 import static io.qameta.allure.jira.TestData.mockJiraService;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -74,7 +73,7 @@ class JiraLaunchExportPluginTest {
                 Paths.get("/")
         );
 
-        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class), RandomStringUtils.random(10));
+        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class), anyString());
         //verify(service).createJiraLaunch(argThat(launch -> launch.getStatistic().size() == 2));
 //        verify(service).createJiraLaunch(argThat(launch -> ISSUES.equals(launch.getStatistic())));
 
