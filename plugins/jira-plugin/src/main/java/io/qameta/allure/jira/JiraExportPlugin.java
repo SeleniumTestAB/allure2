@@ -81,7 +81,7 @@ public class JiraExportPlugin implements Aggregator {
             final Statistic statisticToConvert = getStatistic(launchesResults);
             final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
             final JiraLaunch launch = getJiraLaunch(executor, statistic);
-            final List<JiraExportResult> created = exportLaunchToJira(jiraService, launch, issues);
+            exportLaunchToJira(jiraService, launch, issues);
 
             getTestResults(launchesResults).stream()
                     .map(testResult -> getJiraTestResult(executor, testResult))
