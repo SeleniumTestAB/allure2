@@ -202,6 +202,7 @@ public class JiraExportPlugin implements Aggregator {
                     .filter(this::isIssueLink)
                     .map(Link::getName)
                     .collect(Collectors.toList());
+            LOGGER.info(String.format("jira test result %n%n %s", jiraTestResult));
 
             final List<JiraExportResult> created = jiraService.createTestResult(jiraTestResult, issues);
             created.forEach(creation -> {
