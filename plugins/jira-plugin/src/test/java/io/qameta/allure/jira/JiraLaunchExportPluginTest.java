@@ -59,7 +59,6 @@ class JiraLaunchExportPluginTest {
                 .setBuildName(RandomStringUtils.random(10))
                 .setReportUrl(RandomStringUtils.random(10));
         when(launchResults.getExtra("executor")).thenReturn(Optional.of(executorInfo));
-
         final JiraService service = mockJiraService();
         final JiraExportPlugin jiraLaunchExportPlugin = new JiraExportPlugin(
                 true,
@@ -77,7 +76,7 @@ class JiraLaunchExportPluginTest {
         //verify(service).createJiraLaunch(argThat(launch -> launch.getStatistic().size() == 2));
 //        verify(service).createJiraLaunch(argThat(launch -> ISSUES.equals(launch.getStatistic())));
 
-       // verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())), RandomStringUtils.random(10));
+        // verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())), RandomStringUtils.random(10));
         //verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())), RandomStringUtils.random(10));
 
 //        verify(service).createJiraLaunch(argThat(launch -> launch.getPassed() == 1));
