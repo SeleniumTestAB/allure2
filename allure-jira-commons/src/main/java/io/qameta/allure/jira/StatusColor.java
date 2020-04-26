@@ -26,7 +26,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public enum StatusColor {
     RED("#FF0000"),
-    GREEN("#008000"),
+    GREEN("#00875a"),
     YELLOW("#FFFF00"),
     GRAY("#808080");
 
