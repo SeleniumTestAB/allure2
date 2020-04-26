@@ -35,7 +35,7 @@ public interface JiraService {
     Response<ResponseBody> createIssueComment(@Path("issueKey") String issueKey, @Body JiraIssueComment comment);
 
     @POST("allure/1.0/launch")
-    JiraLaunchResult createJiraLaunch(@Body JiraLaunch launch, @Query("issueKey") List<String> issueKey);
+    List<JiraLaunchResult> createJiraLaunch(@Body JiraLaunch launch, @Query("issueKey") List<String> issueKey);
 
     @GET("allure/1.0/launch")
     List<JiraLaunch> getJiraLaunches(@Query("issueKey") String issueKey);

@@ -77,7 +77,7 @@ public class JiraExportPlugin implements Aggregator {
             final Statistic statisticToConvert = getStatistic(launchesResults);
             final List<LaunchStatisticExport> statistic = convertStatistics(statisticToConvert);
             final JiraLaunch launch = getJiraLaunch(executor, statistic);
-            final JiraLaunchResult created = exportLaunchToJira(jiraService, launch, issues);
+            final List<JiraLaunchResult> created = exportLaunchToJira(jiraService, launch, issues);
 
             getTestResults(launchesResults).stream()
                     .map(testResult -> getJiraTestResult(created, executor, testResult))
@@ -96,7 +96,7 @@ public class JiraExportPlugin implements Aggregator {
                 .setDate(System.currentTimeMillis());
     }
 
-    private Optional<JiraTestResult> getJiraTestResult(final JiraLaunchResult launchResult,
+    private Optional<JiraTestResult> getJiraTestResult(final List<JiraLaunchResult> launchResult,
                                                        final ExecutorInfo executor,
                                                        final TestResult testResult) {
         final List<String> issues = testResult.getLinks().stream()
@@ -113,7 +113,7 @@ public class JiraExportPlugin implements Aggregator {
                     .setUrl(getJiraTestResultUrl(executor.getReportUrl(), testResult.getUid()))
                     .setStatus(testResult.getStatus().toString())
                     .setDate(testResult.getTime().getStop())
-                    .setExternalId(launchResult.getExternalId());
+                    .setExternalId(launchResult.get(0).getExternalId());
             return Optional.of(jiraTestResult);
         }
     }
@@ -166,11 +166,11 @@ public class JiraExportPlugin implements Aggregator {
         }
     }
 
-    private JiraLaunchResult exportLaunchToJira(final JiraService jiraService,
+    private List<JiraLaunchResult> exportLaunchToJira(final JiraService jiraService,
                                           final JiraLaunch launch,
                                           final List<String> issues) {
         try {
-            final JiraLaunchResult created = jiraService.createJiraLaunch(launch, issues);
+            final List<JiraLaunchResult> created = jiraService.createJiraLaunch(launch, issues);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully",
                     issues));
             return created;

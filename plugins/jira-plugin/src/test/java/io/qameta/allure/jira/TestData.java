@@ -20,10 +20,15 @@ import io.qameta.allure.entity.TestResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+
 
 public final class TestData {
 
@@ -33,9 +38,11 @@ public final class TestData {
     public static JiraService mockJiraService() {
         final JiraService service = mock(JiraService.class);
         when(service.createJiraLaunch(any(JiraLaunch.class), anyList())).thenAnswer(i -> {
-            final JiraLaunchResult launch = mock(JiraLaunchResult.class);
-            launch.setExternalId(String.valueOf(RandomUtils.nextInt()));
-            return launch;
+            List<JiraLaunchResult> jiraLaunchResults = spy(new ArrayList<>());
+            jiraLaunchResults.add(new JiraLaunchResult().setExternalId("ALLURE-1")
+                    .setIssueKey("ALLURE-1")
+                    .setStatus("ok"));
+            return jiraLaunchResults;
         });
         when(service.createTestResult(any(JiraTestResult.class))).thenAnswer(i -> {
             final JiraTestResult testResult = i.getArgument(0);
