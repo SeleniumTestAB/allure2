@@ -159,9 +159,10 @@ public class JiraExportPlugin implements Aggregator {
     }
 
     private List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
-        return Stream.of(Status.values()).filter(status -> statistic.get(status) !=0 ).map(status ->
-                new LaunchStatisticExport(status.value(),
-                        findColorForStatus(status), statistic.get(status)))
+        return Stream.of(Status.values()).filter(status -> statistic.get(status) != 0)
+                .map(status ->
+                        new LaunchStatisticExport(status.value(),
+                                findColorForStatus(status), statistic.get(status)))
                 .collect(Collectors.toList());
 
     }
