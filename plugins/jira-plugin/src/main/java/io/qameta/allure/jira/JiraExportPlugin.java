@@ -111,18 +111,12 @@ public class JiraExportPlugin implements Aggregator {
                 .filter(this::isIssueLink)
                 .map(Link::getName)
                 .collect(Collectors.toList());
-
         if (issues.isEmpty()) {
             return Optional.empty();
         } else {
             final JiraTestResult jiraTestResult = new JiraTestResult()
                     .setExternalId(executor.getBuildName())
-                    .setTestCaseId(testResult.getLinks()
-                            .stream()
-                            .filter(this::isIssueLink)
-                            .findFirst()
-                            .orElse(null)
-                            .getName())
+                    .setTestCaseId(testResult.getHistoryId())
                     .setHistoryKey(testResult.getHistoryId())
                     .setName(testResult.getName())
                     .setUrl(getJiraTestResultUrl(executor.getReportUrl(), testResult.getUid()))
@@ -165,7 +159,7 @@ public class JiraExportPlugin implements Aggregator {
     }
 
     private List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
-        return Stream.of(Status.values()).map(status ->
+        return Stream.of(Status.values()).filter(status -> statistic.get(status) !=0 ).map(status ->
                 new LaunchStatisticExport(status.value(),
                         findColorForStatus(status), statistic.get(status)))
                 .collect(Collectors.toList());

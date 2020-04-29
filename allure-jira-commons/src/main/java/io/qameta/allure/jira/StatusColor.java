@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(fluent = true)
 public enum StatusColor {
-    //f90602, 78b63c, 888888
+
     RED("f90602"),
     GREEN("78b63c"),
     YELLOW("febe0d"),
