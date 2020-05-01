@@ -96,18 +96,6 @@ public class JiraExportUtilitiesTest {
         launchStatisticExports.forEach(launchStatisticExport -> assertThat(launchStatisticExport.getCount()).isEqualTo(resultCount));
     }
 
-    @Test
-    public void shouldBeAbleToHandleFailuresInExportResults() {
-        List<JiraExportResult> jiraLaunchResults = spy(new ArrayList<>());
-        jiraLaunchResults.add(new JiraExportResult().setExternalId("ALLURE-1")
-                .setIssueKey("ALLURE-1")
-                .setStatus("ok"));
-        jiraLaunchResults.add(new JiraExportResult().setExternalId(null)
-                .setIssueKey("ALLURE-2")
-                .setStatus("failed"));
-
-       assertThrows(IllegalStateException.class, () -> JiraExportUtility.handleFailedExport(jiraLaunchResults));
-    }
 
 
 
