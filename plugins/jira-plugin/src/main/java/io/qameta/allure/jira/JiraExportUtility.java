@@ -43,8 +43,8 @@ public final class JiraExportUtility {
     }
 
 
-    static JiraLaunch getJiraLaunch(final ExecutorInfo executor,
-                                    final List<LaunchStatisticExport> statistic) {
+    public static JiraLaunch getJiraLaunch(final ExecutorInfo executor,
+                                           final List<LaunchStatisticExport> statistic) {
         return new JiraLaunch()
                 .setExternalId(executor.getBuildName())
                 .setStatistic(statistic)
@@ -53,8 +53,8 @@ public final class JiraExportUtility {
                 .setDate(System.currentTimeMillis());
     }
 
-    static Optional<JiraTestResult> getJiraTestResult(final ExecutorInfo executor,
-                                                      final TestResult testResult) {
+    public static Optional<JiraTestResult> getJiraTestResult(final ExecutorInfo executor,
+                                                             final TestResult testResult) {
         final List<String> issues = testResult.getLinks().stream()
                 .filter(JiraExportUtility::isIssueLink)
                 .map(Link::getName)
@@ -79,14 +79,14 @@ public final class JiraExportUtility {
     }
 
 
-    static List<TestResult> getTestResults(final List<LaunchResults> launchesResults) {
+    public static List<TestResult> getTestResults(final List<LaunchResults> launchesResults) {
         return launchesResults.stream()
                 .map(LaunchResults::getAllResults)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    static ExecutorInfo getExecutor(final List<LaunchResults> launchesResults) {
+    public static ExecutorInfo getExecutor(final List<LaunchResults> launchesResults) {
         return launchesResults.stream()
                 .map(launchResults -> launchResults.getExtra(EXECUTORS_BLOCK_NAME))
                 .filter(Optional::isPresent)
@@ -97,7 +97,7 @@ public final class JiraExportUtility {
                 .orElse(new ExecutorInfo());
     }
 
-    static Statistic getStatistic(final List<LaunchResults> launchesResults) {
+    public static Statistic getStatistic(final List<LaunchResults> launchesResults) {
         final Statistic statistic = new Statistic();
         launchesResults.stream()
                 .map(LaunchResults::getAllResults)
@@ -106,7 +106,7 @@ public final class JiraExportUtility {
         return statistic;
     }
 
-    static List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
+    public static List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
         return Stream.of(Status.values()).filter(status -> statistic.get(status) != 0)
                 .map(status ->
                         new LaunchStatisticExport(status.value(),
@@ -115,7 +115,7 @@ public final class JiraExportUtility {
 
     }
 
-    static String findColorForStatus(final Status status) {
+    public static String findColorForStatus(final Status status) {
         switch (status) {
             case FAILED:
                 return StatusColor.RED.value();
@@ -130,18 +130,18 @@ public final class JiraExportUtility {
         }
     }
 
-    static String getJiraTestResultUrl(final String reportUrl, final String uuid) {
+    public static String getJiraTestResultUrl(final String reportUrl, final String uuid) {
         return Optional.ofNullable(reportUrl)
                 .map(url -> url.endsWith("index.html") ? "%s#testresult/%s" : "%s/#testresult/%s")
                 .map(pattern -> String.format(pattern, reportUrl, uuid))
                 .orElse(null);
     }
 
-    static boolean isIssueLink(final Link link) {
+    public static boolean isIssueLink(final Link link) {
         return "issue".equals(link.getType());
     }
 
-    static List<String> splitByComma(final String value) {
+    public static List<String> splitByComma(final String value) {
         return Arrays.asList(value.split(","));
     }
 
