@@ -42,8 +42,6 @@ public class JiraExportPlugin implements Aggregator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JiraExportPlugin.class);
 
-    private static final String EXECUTORS_BLOCK_NAME = "executor";
-
     private static final String ALLURE_JIRA_ENABLED = "ALLURE_JIRA_ENABLED";
     private static final String ALLURE_JIRA_LAUNCH_ISSUES = "ALLURE_JIRA_LAUNCH_ISSUES";
 
