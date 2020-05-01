@@ -28,9 +28,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 /**
  * @author SeleniumTestAB.
- *
+ * <p>
  * Utility Class for Jira Export Plugin
  */
 
@@ -42,8 +43,8 @@ public final class JiraExportUtility {
     }
 
 
-    protected static JiraLaunch getJiraLaunch(final ExecutorInfo executor,
-                                              final List<LaunchStatisticExport> statistic) {
+    static JiraLaunch getJiraLaunch(final ExecutorInfo executor,
+                                    final List<LaunchStatisticExport> statistic) {
         return new JiraLaunch()
                 .setExternalId(executor.getBuildName())
                 .setStatistic(statistic)
@@ -52,8 +53,8 @@ public final class JiraExportUtility {
                 .setDate(System.currentTimeMillis());
     }
 
-    protected static Optional<JiraTestResult> getJiraTestResult(final ExecutorInfo executor,
-                                                                final TestResult testResult) {
+    static Optional<JiraTestResult> getJiraTestResult(final ExecutorInfo executor,
+                                                      final TestResult testResult) {
         final List<String> issues = testResult.getLinks().stream()
                 .filter(JiraExportUtility::isIssueLink)
                 .map(Link::getName)
@@ -78,14 +79,14 @@ public final class JiraExportUtility {
     }
 
 
-    protected static List<TestResult> getTestResults(final List<LaunchResults> launchesResults) {
+    static List<TestResult> getTestResults(final List<LaunchResults> launchesResults) {
         return launchesResults.stream()
                 .map(LaunchResults::getAllResults)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    protected static ExecutorInfo getExecutor(final List<LaunchResults> launchesResults) {
+    static ExecutorInfo getExecutor(final List<LaunchResults> launchesResults) {
         return launchesResults.stream()
                 .map(launchResults -> launchResults.getExtra(EXECUTORS_BLOCK_NAME))
                 .filter(Optional::isPresent)
@@ -96,7 +97,7 @@ public final class JiraExportUtility {
                 .orElse(new ExecutorInfo());
     }
 
-    protected static Statistic getStatistic(final List<LaunchResults> launchesResults) {
+    static Statistic getStatistic(final List<LaunchResults> launchesResults) {
         final Statistic statistic = new Statistic();
         launchesResults.stream()
                 .map(LaunchResults::getAllResults)
@@ -105,7 +106,7 @@ public final class JiraExportUtility {
         return statistic;
     }
 
-    protected static List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
+    static List<LaunchStatisticExport> convertStatistics(final Statistic statistic) {
         return Stream.of(Status.values()).filter(status -> statistic.get(status) != 0)
                 .map(status ->
                         new LaunchStatisticExport(status.value(),
@@ -114,7 +115,7 @@ public final class JiraExportUtility {
 
     }
 
-    protected static String findColorForStatus(final Status status) {
+    static String findColorForStatus(final Status status) {
         switch (status) {
             case FAILED:
                 return StatusColor.RED.value();
@@ -129,18 +130,18 @@ public final class JiraExportUtility {
         }
     }
 
-    protected static String getJiraTestResultUrl(final String reportUrl, final String uuid) {
+    static String getJiraTestResultUrl(final String reportUrl, final String uuid) {
         return Optional.ofNullable(reportUrl)
                 .map(url -> url.endsWith("index.html") ? "%s#testresult/%s" : "%s/#testresult/%s")
                 .map(pattern -> String.format(pattern, reportUrl, uuid))
                 .orElse(null);
     }
 
-    protected static boolean isIssueLink(final Link link) {
+    static boolean isIssueLink(final Link link) {
         return "issue".equals(link.getType());
     }
 
-    protected static List<String> splitByComma(final String value) {
+    static List<String> splitByComma(final String value) {
         return Arrays.asList(value.split(","));
     }
 
