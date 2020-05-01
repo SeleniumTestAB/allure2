@@ -29,7 +29,8 @@ public enum StatusColor {
     RED("f90602"),
     GREEN("78b63c"),
     YELLOW("febe0d"),
-    GRAY("888888");
+    GRAY("888888"),
+    PURPLE("bf34a6");
 
     private final String value;
 }

@@ -102,8 +102,10 @@ public class JiraExportUtility {
                 return StatusColor.GREEN.value();
             case SKIPPED:
                 return StatusColor.GRAY.value();
-            default:
+            case BROKEN:
                 return StatusColor.YELLOW.value();
+            default:
+                return StatusColor.PURPLE.value();
         }
     }
 

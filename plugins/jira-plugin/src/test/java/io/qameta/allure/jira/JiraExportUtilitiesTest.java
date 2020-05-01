@@ -25,7 +25,7 @@ public class JiraExportUtilitiesTest {
         assertThat(JiraExportUtility.findColorForStatus(Status.PASSED)).isEqualTo(StatusColor.GREEN.value());
         assertThat(JiraExportUtility.findColorForStatus(Status.SKIPPED)).isEqualTo(StatusColor.GRAY.value());
         assertThat(JiraExportUtility.findColorForStatus(Status.BROKEN)).isEqualTo(StatusColor.YELLOW.value());
-        assertThat(JiraExportUtility.findColorForStatus(Status.UNKNOWN)).isEqualTo(StatusColor.YELLOW.value());
+        assertThat(JiraExportUtility.findColorForStatus(Status.UNKNOWN)).isEqualTo(StatusColor.PURPLE.value());
     }
 
     @Test
