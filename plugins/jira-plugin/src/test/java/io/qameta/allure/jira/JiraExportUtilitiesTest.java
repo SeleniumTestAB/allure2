@@ -6,6 +6,7 @@ import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.Set;
 
 import static io.qameta.allure.jira.TestData.createTestResult;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class JiraExportUtilitiesTest {
@@ -91,6 +94,19 @@ public class JiraExportUtilitiesTest {
                 .doesNotContain(StatusColor.GRAY.value(), StatusColor.YELLOW.value());
 
         launchStatisticExports.forEach(launchStatisticExport -> assertThat(launchStatisticExport.getCount()).isEqualTo(resultCount));
+    }
+
+    @Test
+    public void shouldBeAbleToHandleFailuresInExportResults() {
+        List<JiraExportResult> jiraLaunchResults = spy(new ArrayList<>());
+        jiraLaunchResults.add(new JiraExportResult().setExternalId("ALLURE-1")
+                .setIssueKey("ALLURE-1")
+                .setStatus("ok"));
+        jiraLaunchResults.add(new JiraExportResult().setExternalId(null)
+                .setIssueKey("ALLURE-2")
+                .setStatus("failed"));
+
+       assertThrows(IllegalStateException.class, () -> JiraExportUtility.handleFailedExport(jiraLaunchResults));
     }
 
 

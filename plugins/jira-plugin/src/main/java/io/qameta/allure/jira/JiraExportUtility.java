@@ -21,10 +21,14 @@ import io.qameta.allure.entity.Link;
 import io.qameta.allure.entity.Statistic;
 import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
+import io.qameta.allure.jira.retrofit.ServiceException;
+import okhttp3.ResponseBody;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +46,16 @@ public final class JiraExportUtility {
     private JiraExportUtility() {
     }
 
+
+    public static void handleFailedExport(List<JiraExportResult> exportResults) {
+        Optional<JiraExportResult> failedResult = exportResults.stream()
+                .filter(exportResult -> exportResult.getStatus().equals(Status.FAILED.value()))
+                .findFirst();
+        if (failedResult.isPresent()) {
+            throw new IllegalStateException(String.format("There was an failure in response%n %s", failedResult.get()));
+        }
+
+    }
 
     public static JiraLaunch getJiraLaunch(final ExecutorInfo executor,
                                            final List<LaunchStatisticExport> statistic) {

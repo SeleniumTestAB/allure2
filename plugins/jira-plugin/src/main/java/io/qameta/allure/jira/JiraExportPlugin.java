@@ -100,6 +100,8 @@ public class JiraExportPlugin implements Aggregator {
             final List<JiraExportResult> created = jiraService.createJiraLaunch(launch, issues);
             LOGGER.info(String.format("Allure launch '%s' synced with issues  successfully%n",
                     issues));
+            JiraExportUtility.handleFailedExport(created);
+            LOGGER.info("Results of launch export %n %s", created);
             return created;
         } catch (Throwable e) {
             LOGGER.error(String.format("Allure launch sync with issue '%s' error", issues), e);
@@ -115,9 +117,9 @@ public class JiraExportPlugin implements Aggregator {
                     .filter(JiraExportUtility::isIssueLink)
                     .map(Link::getName)
                     .collect(Collectors.toList());
-            LOGGER.info(String.format("jira test result %n%n %s", jiraTestResult));
 
             final List<JiraExportResult> created = jiraService.createTestResult(jiraTestResult, issues);
+            JiraExportUtility.handleFailedExport(created);
             created.forEach(creation -> {
                         LOGGER.info(String.format("Allure test result '%s' synced with issue '%s' successfully",
                                 creation.getExternalId(),
