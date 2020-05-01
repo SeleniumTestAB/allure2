@@ -16,6 +16,7 @@
 package io.qameta.allure.jira;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -29,4 +30,6 @@ public class JiraExportResult {
     private String issueKey;
     private String externalId;
     private String status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String message;
 }
