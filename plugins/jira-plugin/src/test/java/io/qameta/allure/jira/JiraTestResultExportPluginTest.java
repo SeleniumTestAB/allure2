@@ -67,8 +67,6 @@ class JiraTestResultExportPluginTest {
                 .setBuildName(RandomStringUtils.random(10))
                 .setReportUrl(RandomStringUtils.random(10));
         when(launchResults.getExtra("executor")).thenReturn(Optional.of(executorInfo));
-        final Statistic statistic = JiraExportUtility.getStatistic(Arrays.asList(launchResults));
-        final List<LaunchStatisticExport> launchStatisticExports = JiraExportUtility.convertStatistics(statistic);
 
         final JiraService service = mockJiraService();
         final JiraExportPlugin jiraExportPlugin = new JiraExportPlugin(
