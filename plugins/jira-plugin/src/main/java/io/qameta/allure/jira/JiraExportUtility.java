@@ -21,6 +21,8 @@ import io.qameta.allure.entity.Link;
 import io.qameta.allure.entity.Statistic;
 import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,6 +40,7 @@ import java.util.stream.Stream;
 public final class JiraExportUtility {
 
     private static final String EXECUTORS_BLOCK_NAME = "executor";
+    private static final Logger LOGGER = LoggerFactory.getLogger(JiraExportPlugin.class);
 
     private JiraExportUtility() {
     }
@@ -48,7 +51,7 @@ public final class JiraExportUtility {
                 .filter(exportResult -> exportResult.getStatus().equals(Status.FAILED.value()))
                 .findFirst();
         if (failedResult.isPresent()) {
-            throw new IllegalStateException(String.format("There was an failure in response%n %s", failedResult.get()));
+            LOGGER.error(String.format("There was an failure in response%n %s", failedResult.get()));
         }
 
     }

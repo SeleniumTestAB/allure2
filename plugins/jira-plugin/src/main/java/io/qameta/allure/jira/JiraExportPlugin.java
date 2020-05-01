@@ -127,7 +127,7 @@ public class JiraExportPlugin implements Aggregator {
             JiraExportUtility.handleFailedExport(created);
             created.forEach(creation -> {
                         LOGGER.info(String.format("Allure test result '%s' synced with issue '%s' successfully",
-                                creation.getExternalId(),
+                                jiraTestResult.getName(),
                                 creation.getIssueKey()));
                     }
             );
