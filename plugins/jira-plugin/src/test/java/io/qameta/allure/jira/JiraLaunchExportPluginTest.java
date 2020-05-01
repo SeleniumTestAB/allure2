@@ -83,15 +83,13 @@ class JiraLaunchExportPluginTest {
                 Paths.get("/")
         );
 
-        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class), eq(ISSUES));
+        verify(service, times(1)).createJiraLaunch(any(JiraLaunch.class), anyList());
 
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getExternalId())), eq(ISSUES));
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())), eq(ISSUES));
-        verify(service).createJiraLaunch(argThat(launch -> launchStatisticExports.equals(launch.getStatistic())), eq(ISSUES));
-        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())), eq(ISSUES));
-        verify(service).createJiraLaunch(any(JiraLaunch.class), argThat(issues -> issues.containsAll(ISSUES)));
-
-
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getExternalId())), anyList());
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getReportUrl().equals(launch.getUrl())), anyList());
+        verify(service).createJiraLaunch(argThat(launch -> launchStatisticExports.equals(launch.getStatistic())), anyList());
+        verify(service).createJiraLaunch(argThat(launch -> executorInfo.getBuildName().equals(launch.getName())), anyList());
+        verify(service).createJiraLaunch(any(JiraLaunch.class), argThat(issues -> !issues.isEmpty()));
 
     }
 

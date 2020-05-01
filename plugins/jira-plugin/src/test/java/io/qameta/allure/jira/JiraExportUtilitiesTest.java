@@ -58,7 +58,7 @@ public class JiraExportUtilitiesTest {
                         StatusColor.GREEN.value(),
                         StatusColor.GRAY.value(),
                         StatusColor.YELLOW.value(),
-                        StatusColor.YELLOW.value());
+                        StatusColor.PURPLE.value());
         launchStatisticExports.forEach(launchStatisticExport -> assertThat(launchStatisticExport.getCount()).isEqualTo(resultCount));
 
     }
@@ -87,8 +87,8 @@ public class JiraExportUtilitiesTest {
         assertThat(launchStatisticExports).extracting(LaunchStatisticExport::getColor)
                 .contains(StatusColor.RED.value(),
                         StatusColor.GREEN.value(),
-                        StatusColor.YELLOW.value())
-                .doesNotContain(StatusColor.GRAY.value());
+                        StatusColor.PURPLE.value())
+                .doesNotContain(StatusColor.GRAY.value(), StatusColor.YELLOW.value());
 
         launchStatisticExports.forEach(launchStatisticExport -> assertThat(launchStatisticExport.getCount()).isEqualTo(resultCount));
     }
